@@ -18,6 +18,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api-auth', include('rest_framework.urls')),  # 添加DRF的登录视图，以便DRF自动为可视化接口页面生成一个用户登录的入口
-    path('api/article', include('article.urls'))
+    path('api-auth/', include('rest_framework.urls')),  # 添加DRF的登录视图，以便DRF自动为可视化接口页面生成一个用户登录的入口
+    path('api/article/', include('article.urls'))
 ]
