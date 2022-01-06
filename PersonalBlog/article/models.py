@@ -5,6 +5,9 @@ from django.contrib.auth.models import User
 
 # 博客文章 model
 class Article(models.Model):
+    class Meta:
+        ordering = ['-created']
+
     # 标题
     title = models.CharField(max_length=100)
     # 正文

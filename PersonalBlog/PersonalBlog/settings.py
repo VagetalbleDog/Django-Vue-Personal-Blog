@@ -86,6 +86,16 @@ DATABASES = {
     }
 }
 
+# 很难想象，DRF仅在设置中摆放了两行代码，就实现了传统Django框架中的分页功能
+# 当我们发送GET请求时，浏览器返回的内容中多了
+#   "count": 5, # 总共的记录数
+#     "next": "http://127.0.0.1:8000/api/article/?page=2",  # 下一页的地址
+#     "previous": null,  # 上一页的地址
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 2
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators

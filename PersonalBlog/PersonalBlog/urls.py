@@ -13,11 +13,15 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
 from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from article import views
+
+router = DefaultRouter()
+router.register(r'article', views.ArticleViewSet)
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api-auth/', include('rest_framework.urls')),  # 添加DRF的登录视图，以便DRF自动为可视化接口页面生成一个用户登录的入口
-    path('api/article/', include('article.urls'))
+
+    # drf 自动注册路由
+    path('api/', include(router.urls)),
 ]
