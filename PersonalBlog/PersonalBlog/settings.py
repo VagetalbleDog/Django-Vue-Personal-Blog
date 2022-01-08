@@ -92,6 +92,7 @@ DATABASES = {
 #     "next": "http://127.0.0.1:8000/api/article/?page=2",  # 下一页的地址
 #     "previous": null,  # 上一页的地址
 REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],  # 通用过滤
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 2
 }
