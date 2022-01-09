@@ -1,6 +1,18 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+from markdown import Markdown
+
+
+class Tag(models.Model):
+    """文章标签"""
+    tag_name = models.CharField(max_length=30)
+
+    class Meta:
+        ordering = ['-id']
+
+    def __str__(self):
+        return self.tag_name
 
 
 class Category(models.Model):
@@ -28,21 +40,39 @@ class Article(models.Model):
     created = models.DateTimeField(default=timezone.now)
     # 更新时间
     updated = models.DateTimeField(auto_now=True)
-    # 外键———作者
+    # 外键———文章作者
     author = models.ForeignKey(
         User,
         null=True,
         on_delete=models.CASCADE,  # 级联
         related_name='articles'
     )
-    # 外键————分类
+    # 外键————文章分类
     category = models.ForeignKey(
         Category,
         null=True,
         on_delete=models.SET_NULL,
         related_name='articles'
     )
+    # 外键————文章标签
+    tags = models.ManyToManyField(  # 多对多关系
+        Tag,
+        blank=True,
+        related_name='articles'
+    )
+
+    # 将Body转换为带html标签的正文
+    def get_md(self):
+        md = Markdown(
+            extensions=[
+                'markdown.extensions.extra',
+                'markdown.extensions.codehilite',
+                'markdown.extensions.toc',
+            ]
+        )
+        md_body = md.convert(self.body)
+        # toc 是渲染后的目录
+        return md_body, md.toc
 
     def __str__(self):
         return self.title
-

@@ -1,9 +1,9 @@
 from article.permissions import IsAdminUserOrReadOnly
-from article.models import Article, Category
+from article.models import Article, Category, Tag
 from rest_framework import viewsets
-from article.serializers import ArticleSerializer, CategorySerializer,CategoryDetailSerializer
+from article.serializers import ArticleSerializer, CategorySerializer, CategoryDetailSerializer, TagSerializer, \
+    ArticleDetailSerializer
 from rest_framework import filters
-from django_filters.rest_framework import DjangoFilterBackend
 
 
 class ArticleViewSet(viewsets.ModelViewSet):
@@ -13,6 +13,14 @@ class ArticleViewSet(viewsets.ModelViewSet):
     # 导入filters.SearchFilter类实现模糊匹配,实现对文章标题、内容、作者的检索
     filter_backends = [filters.SearchFilter]
     search_fields = ['title', 'body', 'author__username']
+
+    # 根据请求方式动态获取序列化器
+    def get_serializer_class(self):
+        if self.action == 'list':
+            """文章列表"""
+            return ArticleSerializer
+        else:
+            return ArticleDetailSerializer
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -31,3 +39,10 @@ class CategoryViewSet(viewsets.ModelViewSet):
         else:
             """文章分类详情"""
             return CategoryDetailSerializer
+
+
+class TagViewSet(viewsets.ModelViewSet):
+    """文章标签视图集"""
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+    permission_classes = [IsAdminUserOrReadOnly]

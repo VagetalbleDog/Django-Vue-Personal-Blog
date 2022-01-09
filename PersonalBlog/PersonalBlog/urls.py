@@ -20,6 +20,7 @@ from article import views
 router = DefaultRouter()
 router.register(r'article', views.ArticleViewSet)
 router.register(r'category', views.CategoryViewSet)
+router.register(r'tag', views.TagViewSet)
 urlpatterns = [
 
     # drf 自动注册路由
