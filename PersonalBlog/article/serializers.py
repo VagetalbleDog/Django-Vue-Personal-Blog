@@ -1,6 +1,6 @@
 # 序列化器
 from rest_framework import serializers
-from article.models import Article, Category, Tag
+from article.models import Article, Category, Tag,Avatar
 from user_info.serializers import UserDescSerializer
 
 
@@ -59,6 +59,17 @@ class CategoryDetailSerializer(serializers.ModelSerializer):
             'created',
             'articles'
         ]
+
+
+class AvatarSerializer(serializers.ModelSerializer):
+    """文章标题图"""
+    url = serializers.HyperlinkedIdentityField(view_name='avatar-detail')
+
+    class Meta:
+        model = Avatar
+        fields = '__all__'
+
+
 # 抽象出父类，供ArticleSerializer和ArticleDetailSerializer继承使用
 class ArticleBaseSerializer(serializers.HyperlinkedModelSerializer):
     # 文章作者的嵌套序列化字段
@@ -74,6 +85,19 @@ class ArticleBaseSerializer(serializers.HyperlinkedModelSerializer):
         required=False,
         slug_field='tag_name'
     )
+    # 文章标题图
+    avatar = AvatarSerializer(read_only=True)
+    avatar_id= serializers.IntegerField(
+        write_only=True,
+        allow_null=True,
+        required=False
+    )
+
+    # 验证图片id是否存在
+    # 不存在返回验证错误
+    def validate_avatar_id(self,value):
+        if value is not None and not Avatar.objects.filter(id=value).exists():
+            raise serializers.ValidationError("id为{}的文章标题图不存在".format(value))
 
     # 重写此方法，若输入的标签不存在则创建
     # 该方法的原本作用是将请求中的原始Json数据转化为Python表达形式（期间会对字段的有效性做初步检查）。
@@ -96,10 +120,11 @@ class ArticleBaseSerializer(serializers.HyperlinkedModelSerializer):
 
 class ArticleSerializer(ArticleBaseSerializer):  # HyperlinkedModelSerializer自动创建外键字段的超链接，并且隐藏掉了id字段
     """文章序列化器"""
+
     class Meta:
         model = Article
         fields = '__all__'
-        extra_kwargs = {'body':{'write_only':True}}
+        extra_kwargs = {'body': {'write_only': True}}
 
 
 class ArticleDetailSerializer(ArticleBaseSerializer):
@@ -108,10 +133,10 @@ class ArticleDetailSerializer(ArticleBaseSerializer):
     # 渲染后的目录
     toc_html = serializers.SerializerMethodField()
 
-    def get_body_html(self,obj):
+    def get_body_html(self, obj):
         return obj.get_md()[0]
 
-    def get_toc_html(self,obj):
+    def get_toc_html(self, obj):
         return obj.get_md()[1]
 
     class Meta:

@@ -1,8 +1,8 @@
 from article.permissions import IsAdminUserOrReadOnly
-from article.models import Article, Category, Tag
+from article.models import Article, Category, Tag,Avatar
 from rest_framework import viewsets
 from article.serializers import ArticleSerializer, CategorySerializer, CategoryDetailSerializer, TagSerializer, \
-    ArticleDetailSerializer
+    ArticleDetailSerializer,AvatarSerializer
 from rest_framework import filters
 
 
@@ -45,4 +45,11 @@ class TagViewSet(viewsets.ModelViewSet):
     """文章标签视图集"""
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+    permission_classes = [IsAdminUserOrReadOnly]
+
+
+class AvatarViewSet(viewsets.ModelViewSet):
+    """文章标题图视图集"""
+    queryset = Avatar.objects.all()
+    serializer_class = AvatarSerializer
     permission_classes = [IsAdminUserOrReadOnly]
