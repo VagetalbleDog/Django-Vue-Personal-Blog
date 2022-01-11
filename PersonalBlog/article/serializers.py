@@ -1,7 +1,8 @@
 # 序列化器
 from rest_framework import serializers
-from article.models import Article, Category, Tag,Avatar
+from article.models import Article, Category, Tag, Avatar
 from user_info.serializers import UserDescSerializer
+from comment.serializers import CommentSerializer
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -87,7 +88,7 @@ class ArticleBaseSerializer(serializers.HyperlinkedModelSerializer):
     )
     # 文章标题图
     avatar = AvatarSerializer(read_only=True)
-    avatar_id= serializers.IntegerField(
+    avatar_id = serializers.IntegerField(
         write_only=True,
         allow_null=True,
         required=False
@@ -95,7 +96,7 @@ class ArticleBaseSerializer(serializers.HyperlinkedModelSerializer):
 
     # 验证图片id是否存在
     # 不存在返回验证错误
-    def validate_avatar_id(self,value):
+    def validate_avatar_id(self, value):
         if value is not None and not Avatar.objects.filter(id=value).exists():
             raise serializers.ValidationError("id为{}的文章标题图不存在".format(value))
 
@@ -132,6 +133,8 @@ class ArticleDetailSerializer(ArticleBaseSerializer):
     body_html = serializers.SerializerMethodField()
     # 渲染后的目录
     toc_html = serializers.SerializerMethodField()
+    id = serializers.IntegerField(read_only=True)
+    comments = CommentSerializer(many=True, read_only=True)
 
     def get_body_html(self, obj):
         return obj.get_md()[0]

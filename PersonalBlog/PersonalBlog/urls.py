@@ -15,15 +15,17 @@ Including another URLconf
 """
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from article import views
+from article.views import ArticleViewSet, CategoryViewSet, TagViewSet, AvatarViewSet
+from comment.views import CommentViewSet
 from django.conf import settings
 from django.conf.urls.static import static
 
 router = DefaultRouter()
-router.register(r'article', views.ArticleViewSet)
-router.register(r'category', views.CategoryViewSet)
-router.register(r'tag', views.TagViewSet)
-router.register(r'avatar', views.AvatarViewSet)
+router.register(r'article', ArticleViewSet)
+router.register(r'category', CategoryViewSet)
+router.register(r'tag', TagViewSet)
+router.register(r'avatar', AvatarViewSet)
+router.register(r'comment', CommentViewSet)
 
 urlpatterns = [
     # drf 自动注册路由

@@ -72,7 +72,7 @@ class Article(models.Model):
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name='article'
+        related_name='articles'
     )
 
     # 将Body转换为带html标签的正文
