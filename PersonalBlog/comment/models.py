@@ -17,6 +17,14 @@ class Comment(models.Model):
         on_delete=models.CASCADE,
         related_name='comments'
     )
+    # 评论的父评论
+    parent_comments = models.ForeignKey(
+        'self',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='children_comments'
+    )
     body = models.TextField()
     created = models.DateTimeField(default=timezone.now)
 
