@@ -73,6 +73,7 @@ class AvatarSerializer(serializers.ModelSerializer):
 
 # 抽象出父类，供ArticleSerializer和ArticleDetailSerializer继承使用
 class ArticleBaseSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.IntegerField(read_only=True)
     # 文章作者的嵌套序列化字段
     author = UserDescSerializer(read_only=True)
     # 文章分类的嵌套序列化字段
