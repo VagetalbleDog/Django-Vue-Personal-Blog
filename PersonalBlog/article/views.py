@@ -10,9 +10,9 @@ class ArticleViewSet(viewsets.ModelViewSet):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
     permission_classes = [IsAdminUserOrReadOnly]
-    # 导入filters.SearchFilter类实现模糊匹配,实现对文章标题、内容、作者的检索
+    # 导入filters.SearchFilter类实现模糊匹配,实现对文章标题、作者的检索
     filter_backends = [filters.SearchFilter]
-    search_fields = ['title', 'body', 'author__username']
+    search_fields = ['title', 'author__username']
 
     # 根据请求方式动态获取序列化器
     def get_serializer_class(self):

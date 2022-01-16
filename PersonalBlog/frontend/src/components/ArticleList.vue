@@ -8,10 +8,29 @@
           <router-link :to="{ name:'ArticleDetail',params: { id: article.id }}" class="article-title">{{ article.title }}</router-link>
         <div>{{ formatted_time(article.created) }}</div>
     </div>
+    <div id="paginator">
+      <span v-if="is_page_exists('previous')">
+        <router-link :to="get_path('previous')">
+          上一页
+        </router-link>
+      </span>
+      <span  class="current-page" v-if="get_page_param('current')">
+        您在第{{ get_page_param('current') }}页
+      </span>
+      <span  class="current-page" v-if="!get_page_param('current')">
+        您在第1页
+      </span>
+      <span v-if="is_page_exists('next')">
+        <router-link :to="get_path('next')">
+          下一页
+        </router-link>
+      </span>
+    </div>
 </template>
 
 <script>
     import axios from 'axios';
+
     export default {
         name: 'App',
         data: function () {
@@ -20,14 +39,80 @@
             }
         },
         mounted() {
-            axios
-                .get('/api/article/')
-                .then(response => (this.info = response.data))
+            this.get_article_data()
         },
         methods:{
           formatted_time:function (iso_date_string){
             const date = new Date(iso_date_string);
             return date.toLocaleDateString()
+          },
+          // 判断页面是否存在
+          is_page_exists:function (direction){
+            if (direction === 'next'){
+              return this.info.next !== null
+            }
+            return this.info.previous !== null
+          },
+          // 获取页码和搜索参数
+          get_page_param:function (direction){
+            try{
+              let url_string;
+              switch (direction) {
+                case 'next':
+                  url_string = this.info.next;
+                  break;
+                case 'previous':
+                  url_string = this.info.previous;
+                  break;
+                default:
+                  return this.$route.query.page
+              }
+              const url = new URL(url_string);
+              return url.searchParams.get('page')
+            }
+            catch (err){
+              return
+            }
+          },
+          get_article_data:function (){
+            let url = '/api/article';
+            let params = new URLSearchParams();
+            params.append_if_exists('page',this.$route.query.page)
+            params.append_if_exists('search',this.$route.query.search)
+            const paramsString = params.toString();
+            if(paramsString.charAt(0)!==''){
+              url += '/?'+paramsString
+            }
+            axios
+                .get(url)
+                .then(response => (this.info = response.data))
+                .catch(error => console.log(error))
+          },
+          get_path:function (direction){
+            let url = '';
+            try{
+              switch (direction){
+                case 'next':
+                  if (this.info.next !== undefined){
+                    url += (new URL(this.info.next)).search
+                  }
+                  break;
+                case 'previous':
+                  if (this.info.previous!== undefined){
+                    url += (new URL(this.info.previous)).search
+                  }
+                  break;
+              }
+            }
+            catch {
+              return url
+            }
+            return url
+          }
+        },
+        watch:{
+          $route(){
+            this.get_article_data()
           }
         }
     }
@@ -50,8 +135,22 @@
       margin: 5px 5px 5px 0;
       font-family: Georgia, Arial ,sans-serif;
       font-size:small;
-      background-color: #4e4e4e;
+      background-color: dodgerblue;
       color: whitesmoke;
+      text-shadow: white;
       border-radius: 5px;
+    }
+    #paginator{
+      text-align: center;
+      padding-top: 50px;
+    }
+    a{
+      color: black;
+    }
+    .current-page{
+      font-size: x-large;
+      font-weight: bold;
+      padding-left: 10px;
+      padding-right: 10px;
     }
 </style>
