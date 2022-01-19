@@ -1,6 +1,6 @@
 <template>
     <div id="footer">
-        <p>CopyRight © 2022 PersonalBlog Powered By ZhuWenfu</p>
+        <p>CopyRight © 2022 ZhuWenFU.All rights reserved.</p>
     </div>
 </template>
 
@@ -17,7 +17,7 @@ export default {
         bottom: 0;
         height: 50px;
         width: 100%;
-        background: whitesmoke;
+        background: lightgrey;
         text-align: center;
         font-weight: bold;
     }

@@ -1,4 +1,5 @@
 <template>
+    <p style="text-align: left">文章列表如下：</p>
     <div v-for="article in info.results" v-bind:key="article.title" id="articles">
         <div>
           <span v-for="tag in article.tags" v-bind:key="tag" class="tag">
