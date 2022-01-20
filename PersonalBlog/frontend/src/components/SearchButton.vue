@@ -1,7 +1,7 @@
-<template>
+<template style="text-align: right">
   <div class="search">
     <form>
-      <input v-model="searchText" type="text" placeholder="请输入您要搜索的内容">
+      <input v-model="searchText" type="text" placeholder="输入搜索内容">
       <button v-on:click.prevent="searchArticles"></button>
     </form>
   </div>

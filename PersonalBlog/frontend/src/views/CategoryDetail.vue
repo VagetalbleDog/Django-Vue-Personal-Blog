@@ -1,9 +1,9 @@
 <template>
-    <search-button/>
-    <p style="text-align: left">文章列表如下：</p>
+<BlogHeader/>
+  <p style="text-align: left;padding-top: 70px;font-size: x-large"><span class="category" style="font-size: large">{{category_name}}</span>&nbsp;分类&nbsp;文章如下：</p>
     <div class="row mt-2" v-for="article in info.results" v-bind:key="article.title">
         <!-- 文章内容 -->
-        <div class="col-12" >
+        <div class="col-12" v-if="article.category !== null&&article.category.title===category_name">
                 <router-link v-if="article.category !== null" class="category" :to="{name:'CategoryDetail',params: {category_name:article.category.title}}">{{article.category.title}}</router-link>
             <!-- 标签 -->
                 <span v-for="tag in article.tags" v-bind:key="tag" class="tag">
@@ -47,18 +47,22 @@
         </router-link>
       </span>
     </div>
+<BlogFooter/>
 </template>
 
 <script>
     import axios from 'axios';
-    import SearchButton from "@/components/SearchButton";
+    import BlogHeader from "@/components/BlogHeader";
+    import BlogFooter from "@/components/BlogFooter";
+
 
     export default {
         name: 'App',
-      components: {SearchButton},
+      components: {BlogFooter, BlogHeader},
       data: function () {
             return {
-                info:''
+                info:'',
+              category_name: this.$route.params.category_name,
             }
         },
         mounted() {

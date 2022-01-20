@@ -34,7 +34,6 @@ class Category(models.Model):
 
 # 博客文章 model
 class Article(models.Model):
-
     class Meta:
         ordering = ['-created']  # 按文章创建时间递减
 

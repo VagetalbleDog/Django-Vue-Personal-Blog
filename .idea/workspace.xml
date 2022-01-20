@@ -1,7 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6c65834a-1152-46f5-bd7b-fc0c180de76d" name="变更" comment="" />
+    <list default="true" id="6c65834a-1152-46f5-bd7b-fc0c180de76d" name="变更" comment="">
+      <change beforePath="$PROJECT_DIR$/PersonalBlog/.idea/PersonalBlog.iml" beforeDir="false" afterPath="$PROJECT_DIR$/PersonalBlog/.idea/PersonalBlog.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PersonalBlog/PersonalBlog/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/PersonalBlog/PersonalBlog/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PersonalBlog/PersonalBlog/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/PersonalBlog/PersonalBlog/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PersonalBlog/article/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/PersonalBlog/article/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PersonalBlog/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/PersonalBlog/frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PersonalBlog/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/PersonalBlog/frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PersonalBlog/frontend/src/components/ArticleList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/PersonalBlog/frontend/src/components/ArticleList.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PersonalBlog/frontend/src/components/BlogFooter.vue" beforeDir="false" afterPath="$PROJECT_DIR$/PersonalBlog/frontend/src/components/BlogFooter.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PersonalBlog/frontend/src/components/BlogHeader.vue" beforeDir="false" afterPath="$PROJECT_DIR$/PersonalBlog/frontend/src/components/BlogHeader.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PersonalBlog/frontend/src/components/SearchButton.vue" beforeDir="false" afterPath="$PROJECT_DIR$/PersonalBlog/frontend/src/components/SearchButton.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PersonalBlog/frontend/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/PersonalBlog/frontend/src/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PersonalBlog/frontend/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/PersonalBlog/frontend/src/router/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PersonalBlog/frontend/src/utils/authorization.js" beforeDir="false" afterPath="$PROJECT_DIR$/PersonalBlog/frontend/src/utils/authorization.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PersonalBlog/frontend/src/views/UserCenter.vue" beforeDir="false" afterPath="$PROJECT_DIR$/PersonalBlog/frontend/src/views/UserCenter.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PersonalBlog/frontend/src/views/login.vue" beforeDir="false" afterPath="$PROJECT_DIR$/PersonalBlog/frontend/src/views/login.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PersonalBlog/user_info/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/PersonalBlog/user_info/serializers.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -24,6 +41,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/PersonalBlog" />
+    <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -35,6 +53,7 @@
       <updated>1641265215162</updated>
       <workItem from="1641265220782" duration="23000" />
       <workItem from="1641359056925" duration="49000" />
+      <workItem from="1642661411840" duration="32000" />
     </task>
     <servers />
   </component>

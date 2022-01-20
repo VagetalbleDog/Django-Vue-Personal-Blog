@@ -1,8 +1,10 @@
 from article.permissions import IsAdminUserOrReadOnly
-from article.models import Article, Category, Tag,Avatar
+from article.models import Article, Category, Tag, Avatar
+from rest_framework.decorators import action
 from rest_framework import viewsets
+from rest_framework.response import Response
 from article.serializers import ArticleSerializer, CategorySerializer, CategoryDetailSerializer, TagSerializer, \
-    ArticleDetailSerializer,AvatarSerializer
+    ArticleDetailSerializer, AvatarSerializer
 from rest_framework import filters
 
 
@@ -10,7 +12,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
     permission_classes = [IsAdminUserOrReadOnly]
-    # 导入filters.SearchFilter类实现模糊匹配,实现对文章标题、作者的检索
+    # 导入filters.SearchFilter类实现模糊匹配,实现对文章标题、作者、检索
     filter_backends = [filters.SearchFilter]
     search_fields = ['title', 'author__username']
 
@@ -31,6 +33,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [IsAdminUserOrReadOnly]
+    pagination_class = None
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -46,6 +49,7 @@ class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = [IsAdminUserOrReadOnly]
+    pagination_class = None
 
 
 class AvatarViewSet(viewsets.ModelViewSet):

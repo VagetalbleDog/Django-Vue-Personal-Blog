@@ -1,49 +1,90 @@
 <template>
-    <div id="header">
-      <div class="grid">
-        <div></div>
-        <h1>Personal Blog——Django-Vue</h1>
-        <search-button/>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <!-- 导航栏商标 -->
+    <div class="navbar-brand" style="text-align: left">
+          Personal Blog&nbsp;&nbsp;朱文甫的个人博客
     </div>
-      <hr>
-      <div v-if="hasLogin" style="text-align: right">
-        <div class="dropdown">
-          <button class="dropbtn">欢迎，{{ username }}</button>
+    <!-- 导航入口 -->
+    <div v-if="hasLogin" style="text-align: right">
+      <ul class="navbar-nav">
+        <!-- 条目 -->
+        <li class="nav-item">
+          <div class="dropdown">
+          <button class="dropbtn">欢迎，{{ name }}</button>
           <div class="dropdown-content">
-            <router-link :to="{name:'UserCenter',params:{username:username}}">用户信息中心</router-link>
+            <router-link :to="{name:'UserCenter',params:{username:username}}">用户中心</router-link>
             <router-link v-on:click.prevent="logout" to="/">点击注销</router-link>
           </div>
+          </div>
+        </li>
+        <li class="nav-item" v-if="is_superuser==='true'">
+          <router-link :to="{name:'ArticleCreate'}" class="nav-link">点击发表文章</router-link>
+        </li>
+        <li class="nav-item" v-else>
+          <router-link :to="{name:'RequireAuthorization'}" class="nav-link">发表文章,点击获取权限</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/" class="nav-link">回到主页</router-link>
+        </li>
+      </ul>
       </div>
-      </div>
-      <div v-else>
-        <div class="login">
-          请<router-link to="/login" class="login-link">登录</router-link>---还没有账号？请<router-link to="/signup" class="login-link">注册</router-link>
-        </div>
-      </div>
-      <div style="text-align: left"><h4>欢迎大家批评指正！BestWishes！</h4></div>
+    <div v-else>
+      <ul class="navbar-nav">
+        <!-- 条目 -->
+        <li class="nav-item">
+          <router-link to="/login" class="nav-link">登录</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/signup" class="nav-link">注册</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/" class="nav-link">回到主页</router-link>
+        </li>
+      </ul>
     </div>
+  </div>
+</nav>
 </template>
 
 <script>
 import authorization from "@/utils/authorization";
-import SearchButton from "@/components/SearchButton";
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap.min.js'
 export default {
+  //Vue规定camelCase（驼峰命名法）的prop名需要使用其等价的kebab-case（短横线分割命名），所以这里的welcomeName对应welcome-name
+  props:['welcomeName'],
+  //props 父组件可以向子组件传递数据,但反过来不行
+  computed:{
+    //计算属性，基于相应式依赖进行缓存，与methods不同的地方在于：只在相应式依赖发生改变时，它们才会重新求值；而每次触发渲染时，methods都会执行函数
+    //一般来说，能用computed就尽量用，算是用空间换时间的措施
+    name(){
+      return(this.welcomeName !== undefined)? this.welcomeName:this.username
+    },
+    hasLogin(){
+      return (localStorage.getItem('login.myblog') === "1")
+    },
+    is_superuser(){
+      return localStorage.getItem('is_superuser.myblog')
+    },
+  },
   name: "BlogHeader",
-  components: {SearchButton},
   data:function (){
     return{
-      username:'',
-      hasLogin:false,
+      username:' ',
     }
   },
   mounted() {
-    authorization().then((data)=>[this.hasLogin,this.username]=data);
+    authorization().then((data)=>[this.username]=data);
   },
   methods:{
-   logout(){
-     localStorage.clear();
-     window.location.reload(false);
-  }
+     logout(){
+       localStorage.clear();
+       window.location.reload(false);
+    },
+    refresh(){
+       this.username = localStorage.getItem('username.myblog');
+    }
   }
 }
 </script>
@@ -93,20 +134,5 @@ export default {
     /* 当下拉内容显示后修改下拉按钮的背景颜色 */
     .dropdown:hover .dropbtn {
         background-color: darkslateblue;
-    }
-    #header {
-        text-align: center;
-        margin-top: 20px;
-    }
-    .grid{
-      display: grid;
-      grid-template-columns: 1fr 4fr 1fr;
-    }
-    .login-link {
-        color: black;
-    }
-    .login {
-        text-align: right;
-        padding-right: 5px;
     }
 </style>

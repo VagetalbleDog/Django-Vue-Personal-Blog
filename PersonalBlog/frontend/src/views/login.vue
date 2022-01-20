@@ -1,7 +1,6 @@
 <template>
   <BlogHeader/>
-    <div id="grid">
-      <div id="signin">
+      <div id="signin" style="padding-top: 100px">
         <h3>登录</h3>
         <form>
           <div class="form-elem">
@@ -17,7 +16,6 @@
           </div>
         </form>
       </div>
-    </div>
   <BlogFooter/>
 </template>
 
@@ -47,27 +45,41 @@ export default {
             //Token被设置为5分钟
             const expiredTime = Date.parse(response.headers.date) + 60000*5;
             //设置localStorage
+
             storage.setItem('access.myblog',response.data.access);
             storage.setItem('refresh.myblog',response.data.refresh);
             storage.setItem('expiredTime.myblog',expiredTime);
             storage.setItem('username.myblog',that.signInName);
+            //写入登录状态
+            storage.setItem('login.myblog',"1")
             //路由跳转
-            //登录成功后回到博客首页
             that.$router.push({name:'Home'});
+            //登录成功后回到博客首页
           })
           .catch(function (error){
-            alert(error.message)
+            if(error.response.status===401){
+              alert("账号或密码错误！")
+            }
+            console.log(error.message)
+          })
+      axios
+          .get('/api/user/'+that.signInName+'/')
+          .then(function (response){
+            localStorage.setItem('is_superuser.myblog',response.data.is_superuser);
+            if(localStorage.getItem('is_superuser.myblog')==="true"){
+              console.log('当前用户为管理员。')
+            }
+          })
+          .catch(function (error) {
+            console.log(error.message)
+            alert('貌似除了点问题，不能加载您的权限信息，请尝试联系管理员？谢谢您的反馈!')
           })
     }
-  }
+    }
 }
 </script>
 
 <style scoped>
-    #grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-    }
     #signin{
       text-align: center;
     }

@@ -1,6 +1,6 @@
 <template>
   <BlogHeader/>
-      <div v-if="article !== null" class="grid-container">
+      <div v-if="article !== null" class="grid-container" style="padding-top: 100px">
         <div>
             <h1 id="title">{{ article.title }}</h1>
             <p id="subtitle">

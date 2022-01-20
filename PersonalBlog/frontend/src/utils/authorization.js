@@ -5,8 +5,6 @@ import axios from "axios";
 //异步方法
 async function authorization(){
     const storage = localStorage;
-
-    let hasLogin = false;
     let username = storage.getItem('username.myblog');
 
      // 过期时间
@@ -18,7 +16,7 @@ async function authorization(){
 
     // 初始token还没过期
     if(expiredTime>current){
-      hasLogin = true;
+      storage.setItem('login.myblog',"1")
       console.log('JWT令牌验证成功!');
       console.log("当前用户：",username);
     }
@@ -32,13 +30,13 @@ async function authorization(){
             storage.setItem('expiredTime.myblog',nextExpiredTime);
             storage.removeItem('refresh.myblog');
 
-            hasLogin = true;
+            storage.setItem('login.myblog',"1")
             console.log('令牌已刷新!');
             console.log("当前用户：",username)
         }
         catch (error){
             storage.clear();
-            hasLogin = false;
+            storage.setItem('login.myblog',"0")
 
             console.log('令牌出错，错误信息：',error.message)
         }
@@ -46,10 +44,10 @@ async function authorization(){
     //无有效Token
     else {
         storage.clear();
-        hasLogin = false;
+        storage.setItem('login.myblog',"0")
         console.log("无有效Token")
     }
-    return [hasLogin,username]
+    return [username]
 }
 
 export default authorization;

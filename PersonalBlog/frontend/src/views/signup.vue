@@ -1,7 +1,6 @@
 <template>
 <BlogHeader/>
-    <div id="grid">
-      <div id="signup">
+      <div id="signup" style="padding-top: 150px">
         <h3>注册账号</h3>
         <form>
           <div class="form-elem">
@@ -21,7 +20,6 @@
           </div>
         </form>
       </div>
-    </div>
   <BlogFooter/>
 </template>
 <script>

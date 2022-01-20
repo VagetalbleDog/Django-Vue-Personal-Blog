@@ -4,6 +4,9 @@ import ArticleDetail from "@/views/ArticleDetail.vue";
 import login from "@/views/login";
 import signup from "@/views/signup";
 import UserCenter from "@/views/UserCenter";
+import ArticleCreate from "@/views/ArticleCreate";
+import RequireAuthorizations from "@/views/RequireAuthorizations";
+import CategoryDetail from "@/views/CategoryDetail";
 
 const routes = [
     {
@@ -30,6 +33,21 @@ const routes = [
         path: '/user/:username',
         name: "UserCenter",
         component: UserCenter
+    },
+    {
+        path: '/article/create',
+        name:"ArticleCreate",
+        component: ArticleCreate
+    },
+    {
+        path: '/require/authorization',
+        name:"RequireAuthorization",
+        component: RequireAuthorizations
+    },
+    {
+        path: '/category/:category_name',
+        name:"CategoryDetail",
+        component: CategoryDetail
     }
 ];
 
