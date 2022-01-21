@@ -29,7 +29,7 @@
             <hr>
         </div>
 </div>
-    <div id="paginator" style="padding-top: 100px">
+    <div id="paginator" style="padding-top: 50px">
       <span v-if="is_page_exists('previous')">
         <router-link :to="get_path('previous')" style="color: #42b983">
           上一页

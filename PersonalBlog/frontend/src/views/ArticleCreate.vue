@@ -5,7 +5,7 @@
     <form>
       <div class="form-elem">
         <span>标题：</span>
-        <input v-model="title" type="text" placeholder="输入文章标题">
+        <input v-model="title" type="text" placeholder="输入文章标题" style="width: 500px">
       </div>
 
       <div class="form-elem">
@@ -20,12 +20,12 @@
 
       <div class="form-elem">
         <span>标签：</span>
-        <input v-model="tags" type="text" placeholder="输入标签，用逗号分隔">
+        <input v-model="tags" type="text" placeholder="输入标签，用逗号分隔" style="width: 500px">
       </div>
 
       <div class="form-elem">
         <span>正文：</span>
-        <textarea v-model="body" placeholder="输入正文，推荐使用Markdown语法，让你的文章更有层次感" rows="20" cols="80"></textarea>
+        <textarea v-model="body" placeholder="输入正文，推荐使用Markdown语法，让你的文章更有层次感" rows="15" cols="80"></textarea>
       </div>
 
       <div class="form-elem" style="padding-top:10px;text-align: center">
@@ -136,8 +136,13 @@ export default {
                 that.$router.push({name:'ArticleDetail',params:{id:response.data.id}});
               })
               .catch(function (error){
+                if(error.response.status===400){
+                  alert('您还未填写相关内容呢，心急吃不了热豆腐！')
+                }
+                else{
+                  alert('似乎除了点问题，您可以联系开发者解决.');
+                }
                 console.log(error.message);
-                alert('似乎除了点问题，您可以联系开发者解决.');
               })
           }else {
             alert("登录已过期，请重新登录哦")

@@ -4,7 +4,8 @@
         <div>
             <h1 id="title">{{ article.title }}</h1>
             <p id="subtitle">
-                本文由 {{ article.author.username }} 发布于 {{ formatted_time(article.created) }}
+                本文由 {{ article.author.username }} 发布于 {{ formatted_time(article.created) }}&nbsp;最后更新于 {{ formatted_time(article.updated) }}
+              <router-link :to="{name:'ArticleEdit',params:{article_id:article.id}}" v-if="author_name===article.author.username">&nbsp;更新或删除文章</router-link>
             </p>
             <div v-html="article.body_html" class="article-body"></div>
         </div>
@@ -25,7 +26,8 @@ export default {
   components:{BlogHeader,BlogFooter},
   data: function (){
     return {
-      article:null
+      article:null,
+      author_name:localStorage.getItem('username.myblog'),
     }
   },
   mounted() {

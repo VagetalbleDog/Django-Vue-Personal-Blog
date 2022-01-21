@@ -1,6 +1,6 @@
 <template>
     <search-button/>
-    <p style="text-align: left">文章列表如下：</p>
+    <p style="text-align: left;font-size: x-large">本博客现存文章共{{info.count}}篇，如下：</p>
     <div class="row mt-2" v-for="article in info.results" v-bind:key="article.title">
         <!-- 文章内容 -->
         <div class="col-12" >
@@ -23,13 +23,16 @@
                     {{ formatted_time(article.created) }} 发布&nbsp;&nbsp;&nbsp;
                 </span>
                 <span style="color: darkred;">
-                    {{ formatted_time(article.updated) }} 更新
+                    {{ formatted_time(article.updated) }} 更新 &nbsp;
+                </span>
+                <span style="color: blueviolet;">
+                    由&nbsp;{{article.author.username}} 创作
                 </span>
             </p>
             <hr>
         </div>
 </div>
-    <div id="paginator" style="padding-top: 100px">
+    <div id="paginator" style="padding-top: 50px">
       <span v-if="is_page_exists('previous')">
         <router-link :to="get_path('previous')" style="color: #42b983">
           上一页

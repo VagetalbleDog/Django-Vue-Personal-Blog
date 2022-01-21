@@ -23,7 +23,7 @@
       <div class="form-elem">
         <button v-on:click.prevent="showingDeleteAlert = true" class="delete-btn">点击删除用户</button>
         <div :class="{shake:showingDeleteAlert}">
-          <button v-if="showingDeleteAlert" class="confirm-btn" @click.prevent="confirmDelete">您确定吗？</button>
+          <button v-if="showingDeleteAlert" class="confirm-btn" @click.prevent="confirmDelete">确定？</button>
         </div>
       </div>
     </form>
@@ -176,7 +176,7 @@ export default {
         border-radius: 5px;
         width: 200px;
     }
-        .confirm-btn {
+    .confirm-btn {
         width: 80px;
         background-color: darkorange;
     }

@@ -7,6 +7,8 @@ import UserCenter from "@/views/UserCenter";
 import ArticleCreate from "@/views/ArticleCreate";
 import RequireAuthorizations from "@/views/RequireAuthorizations";
 import CategoryDetail from "@/views/CategoryDetail";
+import ArticleEdit from "@/views/ArticleEdit";
+import MyArticle from "@/views/MyArticle";
 
 const routes = [
     {
@@ -48,6 +50,16 @@ const routes = [
         path: '/category/:category_name',
         name:"CategoryDetail",
         component: CategoryDetail
+    },
+    {
+        path: '/article/edit/:article_id',
+        name:"ArticleEdit",
+        component: ArticleEdit
+    },
+    {
+        path: '/myarticle/:author_name',
+        name:'MyArticle',
+        component: MyArticle
     }
 ];
 

@@ -21,6 +21,9 @@
         <li class="nav-item" v-if="is_superuser==='true'">
           <router-link :to="{name:'ArticleCreate'}" class="nav-link">点击发表文章</router-link>
         </li>
+        <li class="nav-item" v-if="is_superuser==='true'">
+          <router-link :to="{name:'MyArticle',params: {author_name:username}}" class="nav-link">我的文章</router-link>
+        </li>
         <li class="nav-item" v-else>
           <router-link :to="{name:'RequireAuthorization'}" class="nav-link">发表文章,点击获取权限</router-link>
         </li>
