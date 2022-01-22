@@ -2,18 +2,19 @@
   <BlogHeader/>
       <div v-if="article !== null" class="grid-container" style="padding-top: 100px">
         <div>
-            <h1 id="title">{{ article.title }}</h1>
+            <h1 id="title" style="font-size: xx-large;">{{ article.title }}</h1>
             <p id="subtitle">
                 本文由 {{ article.author.username }} 发布于 {{ formatted_time(article.created) }}&nbsp;最后更新于 {{ formatted_time(article.updated) }}
               <router-link :to="{name:'ArticleEdit',params:{article_id:article.id}}" v-if="author_name===article.author.username">&nbsp;更新或删除文章</router-link>
             </p>
-            <div v-html="article.body_html" class="article-body"></div>
+            <div v-html="article.body_html" class="article-body" style="font-size: large;padding-top: 50px"></div>
         </div>
         <div>
             <h3>目录</h3>
             <div v-html="article.toc_html" class="toc"></div>
         </div>
     </div>
+  <Comments :article="article"/>
   <BlogFooter/>
 </template>
 
@@ -21,9 +22,10 @@
 import BlogFooter from "@/components/BlogFooter";
 import BlogHeader from "@/components/BlogHeader";
 import axios from "axios";
+import Comments from "@/components/Comments";
 export default {
   name: "ArticleDetail",
-  components:{BlogHeader,BlogFooter},
+  components:{Comments, BlogHeader,BlogFooter},
   data: function (){
     return {
       article:null,

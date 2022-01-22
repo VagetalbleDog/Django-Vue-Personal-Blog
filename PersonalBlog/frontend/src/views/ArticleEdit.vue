@@ -2,6 +2,12 @@
 <BlogHeader/>
   <div v-if="is_superuser==='true'&&hasLogin" id="article-create">
     <h3>更新或删除文章</h3>
+    <form id="image_form" v-if="!avatar">
+    <div class="form-elem">
+      <span>标题图：</span>
+      <input v-on:change="onFileChange" type="file" id="file" style="padding-bottom:3px;opacity: 0.5">
+    </div>
+  </form>
     <form>
       <div class="form-elem">
         <span>标题：</span>
@@ -27,15 +33,16 @@
         <span>正文：</span>
         <textarea v-model="body" placeholder="输入正文，推荐使用Markdown语法，让你的文章更有层次感" rows="20" cols="80"></textarea>
       </div>
-
-      <div class="form-elem" style="padding-top:10px;text-align: center">
+      <div style="padding-left: 500px">
+      <div class="form-elem" style="padding-top:10px;float: left">
         <button v-on:click.prevent="submit" style="width: auto;">提交修改</button>
       </div>
-      <div class="form-elem" style="padding-top:10px;text-align: center">
+      <div class="form-elem" style="padding-top:10px;text-align: left">
         <button v-on:click.prevent="showingDeleteAlert = true" class="delete-btn" style="width: auto">删除文章</button>
-        <div :class="{shake:showingDeleteAlert}">
+        <div :class="{shake:showingDeleteAlert}" style="padding-left: 80px">
           <button v-if="showingDeleteAlert" class="confirm-btn" @click.prevent="delete_article(article_id)" style="width: auto">您确定吗？</button>
         </div>
+      </div>
       </div>
     </form>
 </div>
@@ -66,7 +73,9 @@ export default {
       selectedCategory:null,
       tags:'',
       showingDeleteAlert:false,
-      article_id: this.$route.params.article_id
+      article_id: this.$route.params.article_id,
+      avatarID:null,
+      avatar:null,
     }
   },
   computed:{
@@ -93,9 +102,38 @@ export default {
           that.selectedCategory = data.category;
           that.tags = data.tags.join(',');
           that.articleID = data.id;
+          that.avatar = data.avatar;
         })
     },
   methods:{
+    onFileChange(e){
+      const that = this;
+      const file = e.target.files[0];
+      let formData = new FormData();
+      formData.append("content",file);
+      // 验证一下权限
+      authorization()
+        .then(function (response) {
+          if (response[0]) {
+            console.log('ssss')
+            axios
+                .post('/api/avatar/', formData, {
+                  headers:{
+                    'Content-Type':'multipart/form-data',
+                    'Authorization':'Bearer '+localStorage.getItem('access.myblog')
+                  }
+                })
+                .then(response => that.avatarID = response.data.id)
+                .catch(function (error){
+                  console.log(error.message);
+                  alert('标题图未成功上传，请联系开发人员解决。')
+                })
+          } else {
+            alert('请登录后再进行操作！');
+            that.$router.push({name:'Login'})
+          }
+        })
+    },
     // 根据分类是否被选中，按钮的颜色发生变化
     // 这里可以看出Css也是可以被vue所绑定的，肥肠的方便
     categoryStyle(category){
@@ -161,6 +199,7 @@ export default {
               title:that.title,
               body:that.body,
             };
+            data.avatar_id = that.avatarID;
             // 添加分类
             if(that.selectedCategory){
               data.category_id = that.selectedCategory.id;

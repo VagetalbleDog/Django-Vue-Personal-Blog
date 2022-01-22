@@ -2,6 +2,12 @@
 <BlogHeader/>
 <div v-if="is_superuser==='true'&&hasLogin" id="article-create">
     <h3>发表文章</h3>
+  <form id="image_form">
+    <div class="form-elem">
+      <span>标题图：</span>
+      <input v-on:change="onFileChange" type="file" id="file" style="padding-bottom:3px;opacity: 0.5" accept="image/gif,image/jpeg"/>
+    </div>
+  </form>
     <form>
       <div class="form-elem">
         <span>标题：</span>
@@ -59,6 +65,7 @@ export default {
       categories:[],
       selectedCategory:null,
       tags:'',
+      avatarID:null,
     }
   },
   computed:{
@@ -76,6 +83,35 @@ export default {
     .then(response => this.categories=response.data)
   },
   methods:{
+    //将文件二进制数据添加到提交数据中
+    onFileChange(e){
+      const that = this;
+      const file = e.target.files[0];
+      let formData = new FormData();
+      formData.append("content",file);
+      // 验证一下权限
+      authorization()
+        .then(function (response) {
+          if (response[0]) {
+            console.log('ssss')
+            axios
+                .post('/api/avatar/', formData, {
+                  headers:{
+                    'Content-Type':'multipart/form-data',
+                    'Authorization':'Bearer '+localStorage.getItem('access.myblog')
+                  }
+                })
+                .then(response => that.avatarID = response.data.id)
+                .catch(function (error){
+                  console.log(error.message);
+                  alert('标题图未成功上传，请联系开发人员解决。')
+                })
+          } else {
+            alert('请登录后再进行操作！');
+            that.$router.push({name:'Login'});
+          }
+        })
+    },
     // 根据分类是否被选中，按钮的颜色发生变化
     // 这里可以看出Css也是可以被vue所绑定的，肥肠的方便
     categoryStyle(category){
@@ -111,6 +147,7 @@ export default {
               title:that.title,
               body:that.body,
             };
+            data.avatar_id = that.avatarID;
             // 添加分类
             if(that.selectedCategory){
               data.category_id = that.selectedCategory.id;
@@ -123,8 +160,10 @@ export default {
               .map(x=>x.trim())
                 // 剔除长度为0的无效标签
               .filter(x=>x.charAt(0)!=='');
+            //图片id处理
             // 获取token
             const token = localStorage.getItem('access.myblog');
+            console.log(data);
             // 发送请求POST
             axios
               .post('/api/article/',data,{
@@ -186,4 +225,5 @@ export default {
     border-radius: 5px;
     width: 60px;
   }
+
 </style>

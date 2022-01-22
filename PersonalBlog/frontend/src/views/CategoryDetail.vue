@@ -3,31 +3,38 @@
   <p style="text-align: left;padding-top: 70px;font-size: x-large"><span class="category" style="font-size: large">{{category_name}}</span>&nbsp;分类&nbsp;文章如下：</p>
     <div class="row mt-2" v-for="article in info.results" v-bind:key="article.title">
         <!-- 文章内容 -->
-        <div class="col-12" v-if="article.category !== null&&article.category.title===category_name">
+        <div class="col-12" >
+        <div class="image-container" style="float: left" v-if="article.avatar">
+          <img :src="imageIfExists(article)" alt="" class="image">
+        </div>
+          <div style="padding-top: 30px">
                 <router-link v-if="article.category !== null" class="category" :to="{name:'CategoryDetail',params: {category_name:article.category.title}}">{{article.category.title}}</router-link>
             <!-- 标签 -->
                 <span v-for="tag in article.tags" v-bind:key="tag" class="tag">
                   {{ tag }}
                 </span>
+            </div>
             <!-- 标题 -->
-            <h3>
+            <h3 style="padding-top: 20px">
                 <b>
                     <router-link :to="{ name:'ArticleDetail',params: { id: article.id }}" class="article-title">{{ article.title }}</router-link>
                 </b>
             </h3>
             <!-- 摘要 -->
             <!-- 注脚 -->
-            <p>
+            <p style="padding-top: 20px">
                 <!-- 附加信息 -->
                 <span style="color: blue;">
                     {{ formatted_time(article.created) }} 发布&nbsp;&nbsp;&nbsp;
                 </span>
                 <span style="color: darkred;">
-                    {{ formatted_time(article.updated) }} 更新
+                    {{ formatted_time(article.updated) }} 更新 &nbsp;
                 </span>
             </p>
-            <hr>
         </div>
+      <div>
+        <hr>
+      </div>
 </div>
     <div id="paginator" style="padding-top: 50px">
       <span v-if="is_page_exists('previous')">
@@ -69,6 +76,12 @@
             this.get_article_data()
         },
         methods:{
+          imageIfExists(article){
+            if(article.avatar){
+              console.log('yes')
+              return article.avatar.content
+            }
+          },
           formatted_time:function (iso_date_string){
             const date = new Date(iso_date_string);
             return date.toLocaleDateString()
@@ -104,16 +117,18 @@
           get_article_data:function (){
             let url = '/api/article';
             let params = new URLSearchParams();
-            params.append_if_exists('page',this.$route.query.page)
-            params.append_if_exists('search',this.$route.query.search)
+            params.append_if_exists('page', this.$route.query.page);
             const paramsString = params.toString();
-            if(paramsString.charAt(0)!==''){
-              url += '/?'+paramsString
-            }
+            url += '/?'+'&search='+this.category_name+'&'+paramsString
             axios
                 .get(url)
                 .then(response => (this.info = response.data))
-                .catch(error => console.log(error))
+                .catch(function (error){
+                  console.log(error.message);
+                  if(error.response.status===404){
+                    alert('该分类下暂无文章！')
+                  }
+                })
           },
           get_path:function (direction){
             let url = '';
@@ -146,6 +161,14 @@
 </script>
 
 <style scoped>
+    .image{
+      width: 155px;
+      border-radius: 10px;
+      box-shadow: darkslategrey 0 0 12px;
+    }
+    .image-container{
+      width: 170px;
+    }
     .category{
       padding: 5px 10px 5px 10px;
       margin: 5px 5px 5px 0;

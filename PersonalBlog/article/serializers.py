@@ -100,6 +100,7 @@ class ArticleBaseSerializer(serializers.HyperlinkedModelSerializer):
     def validate_avatar_id(self, value):
         if value is not None and not Avatar.objects.filter(id=value).exists():
             raise serializers.ValidationError("id为{}的文章标题图不存在".format(value))
+        return value
 
     # 重写此方法，若输入的标签不存在则创建
     # 该方法的原本作用是将请求中的原始Json数据转化为Python表达形式（期间会对字段的有效性做初步检查）。
