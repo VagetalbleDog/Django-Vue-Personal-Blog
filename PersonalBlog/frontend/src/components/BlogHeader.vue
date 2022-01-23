@@ -83,7 +83,7 @@ export default {
   methods:{
      logout(){
        localStorage.clear();
-       window.location.reload(false);
+       // this.$router.push({name:'Home'})
     },
     refresh(){
        this.username = localStorage.getItem('username.myblog');

@@ -5,7 +5,7 @@
     <form id="image_form" v-if="!avatar">
     <div class="form-elem">
       <span>标题图：</span>
-      <input v-on:change="onFileChange" type="file" id="file" style="padding-bottom:3px;opacity: 0.5">
+      <input v-on:change="onFileChange" type="file" id="file" style="padding-bottom:3px;opacity: 0.5" accept="image/gif,image/jpeg">
     </div>
   </form>
     <form>
@@ -35,7 +35,7 @@
       </div>
       <div style="padding-left: 500px">
       <div class="form-elem" style="padding-top:10px;float: left">
-        <button v-on:click.prevent="submit" style="width: auto;">提交修改</button>
+        <button v-on:click.prevent="submit" style="width: auto;background-color: dodgerblue">提交修改</button>
       </div>
       <div class="form-elem" style="padding-top:10px;text-align: left">
         <button v-on:click.prevent="showingDeleteAlert = true" class="delete-btn" style="width: auto">删除文章</button>

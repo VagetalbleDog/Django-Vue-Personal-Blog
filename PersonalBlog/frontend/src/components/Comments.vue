@@ -16,19 +16,27 @@
         <span class="created">
           {{ formatted_time(comment.created) }}
         </span>
-        <span v-if="comment.parent_comments">
+        <span>
           对
+          <span v-if="comment.parent_comments">
           <span class="parent">
-            {{ comment.parent_comments.author.username }}
+            {{ comment.parent_comments.author.username }} 的评论——
           </span>
+          <span class="parent" style="color: darkgreen">
+            “{{ comment.parent_comments.body }}”
+          </span>
+          </span>
+        <span v-else class="parent">
+          &nbsp;作者
         </span>
-        说道：
+        评论：
+       </span>
       </div>
       <div class="content">
         {{ comment.body }}
       </div>
       <div>
-        <button class="commentBtn" @click="replyTo(comment)">回复</button>
+        <button class="btn btn-primary" @click="replyTo(comment)">回复</button>
       </div>
     </div>
     <hr>
@@ -38,7 +46,7 @@
 <!--  评论文本输入空间-->
   <textarea v-model="message" :placeholder="placeholder" name="comment" id="comment-area" cols="80" rows="2"></textarea>
   <div>
-    <button @click="submit" class="submitBtn">发布</button>
+    <button @click="submit" class="btn btn-primary">发布</button>
   </div>
    </div>
 </template>
@@ -119,16 +127,6 @@ export default {
     outline: none;
     color: whitesmoke;
     border-radius: 5px;
-  }
-  .submitBtn {
-    height: 35px;
-    background: steelblue;
-    width: 60px;
-  }
-  .commentBtn {
-    height: 25px;
-    background: lightslategray;
-    width: 40px;
   }
   .comments {
     padding-top: 10px;

@@ -35,7 +35,7 @@
       </div>
 
       <div class="form-elem" style="padding-top:10px;text-align: center">
-        <button v-on:click.prevent="submit">提交</button>
+        <button v-on:click.prevent="submit" style="background-color: blue">提交</button>
       </div>
     </form>
 </div>
