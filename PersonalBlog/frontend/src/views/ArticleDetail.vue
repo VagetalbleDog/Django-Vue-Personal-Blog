@@ -1,5 +1,6 @@
 <template>
   <BlogHeader/>
+  <div id="ArticleDetail">
       <div v-if="article !== null" class="grid-container" style="padding-top: 100px">
         <div>
             <h1 id="title" style="font-size: xx-large;">{{ article.title }}</h1>
@@ -9,12 +10,13 @@
             </p>
             <div v-html="article.body_html" class="article-body" style="font-size: large;padding-top: 50px"></div>
         </div>
-        <div>
+        <div style="position: fixed;margin-left: 1400px">
             <h3>目录</h3>
             <div v-html="article.toc_html" class="toc"></div>
         </div>
     </div>
   <Comments :article="article"/>
+    </div>
   <BlogFooter/>
 </template>
 
@@ -50,8 +52,10 @@ export default {
         display: grid;
         grid-template-columns: 3fr 1fr;
     }
-
-
+    #ArticleDetail{
+      margin-left: 50px;
+      margin-right: 50px;
+    }
     #title {
         text-align: center;
         font-size: x-large;
@@ -79,7 +83,7 @@ export default {
         color: gray;
     }
     .toc{
-      background-color: lightgrey;
+      background-color: white;
     }
     pre { line-height: 125%; }
     td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }

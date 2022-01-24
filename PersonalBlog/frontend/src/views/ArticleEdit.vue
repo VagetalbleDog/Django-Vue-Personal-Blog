@@ -60,84 +60,73 @@
 <script>
 import BlogHeader from "@/components/BlogHeader";
 import BlogFooter from "@/components/BlogFooter";
+import ArticleEdit from "@/composables/ArticleEdit";
 import axios from "axios";
+import {onMounted, ref} from "vue";
+import { useRouter} from "vue-router";
 import authorization from "@/utils/authorization";
 export default {
   name: "ArticleEdit",
   components: {BlogFooter, BlogHeader},
-  data:function (){
-    return{
-      title:'',
-      body:'',
-      categories:[],
-      selectedCategory:null,
-      tags:'',
-      showingDeleteAlert:false,
-      article_id: this.$route.params.article_id,
-      avatarID:null,
-      avatar:null,
-    }
-  },
-  computed:{
-    is_superuser(){
-      return localStorage.getItem('is_superuser.myblog')
-    },
-    hasLogin(){
-      return (localStorage.getItem('login.myblog') === "1")
-    },
-  },
-  mounted() {
-      // 页面初始化时获取所有分类
+  setup(){
+    const router = useRouter();
+    const title = ref('');
+    const body = ref('');
+    const categories = ref([]);
+    const selectedCategory = ref(null);
+    const tags = ref(' ');
+    const showingDeleteAlert = ref(false);
+    const article_id = router.currentRoute.value.params.article_id
+    const avatarID = ref(null);
+    const avatar = ref(null);
+    const getOldData = function (){
       axios
         .get('/api/category/')
-        .then(response => this.categories = response.data);
+        .then(response => categories.value = response.data);
       // 获取旧数据
-      const that = this;
       axios
-        .get('/api/article/' + this.$route.params.article_id + '/')
+        .get('/api/article/' + article_id + '/')
         .then(function (response) {
           const data = response.data;
-          that.title = data.title;
-          that.body = data.body;
-          that.selectedCategory = data.category;
-          that.tags = data.tags.join(',');
-          that.articleID = data.id;
-          that.avatar = data.avatar;
+          title.value = data.title;
+          body.value = data.body;
+          selectedCategory.value = data.category;
+          tags.value = data.tags.join(',');
+          avatar.value = data.avatar;
+          avatarID.value=data.avatar.id;
         })
-    },
-  methods:{
-    onFileChange(e){
-      const that = this;
+    }
+    onMounted(getOldData);
+    // 一些methods
+    const onFileChange = function (e){
       const file = e.target.files[0];
       let formData = new FormData();
       formData.append("content",file);
-      // 验证一下权限
+    // 验证一下权限
       authorization()
-        .then(function (response) {
-          if (response[0]) {
-            console.log('ssss')
-            axios
-                .post('/api/avatar/', formData, {
-                  headers:{
-                    'Content-Type':'multipart/form-data',
-                    'Authorization':'Bearer '+localStorage.getItem('access.myblog')
-                  }
-                })
-                .then(response => that.avatarID = response.data.id)
-                .catch(function (error){
-                  console.log(error.message);
-                  alert('标题图未成功上传，请联系开发人员解决。')
-                })
-          } else {
-            alert('请登录后再进行操作！');
-            that.$router.push({name:'Login'})
+          .then(function (response) {
+              if (response[0]) {
+              console.log('标题图开始上传');
+              axios
+                  .post('/api/avatar/', formData, {
+                      headers:{
+                      'Content-Type':'multipart/form-data',
+                      'Authorization':'Bearer '+localStorage.getItem('access.myblog')
+                    }
+                  })
+                  .then(response => avatarID.value = response.data.id)
+                  .catch(function (error){
+                      console.log(error.message);
+                      alert('标题图未成功上传，请联系开发人员解决。')
+                  })
+              } else {
+              alert('请登录后再进行操作！');
+              router.push({name:'Login'})
           }
         })
-    },
-    // 根据分类是否被选中，按钮的颜色发生变化
-    // 这里可以看出Css也是可以被vue所绑定的，肥肠的方便
-    categoryStyle(category){
-      if(this.selectedCategory!==null && category.id===this.selectedCategory.id){
+    };
+    const categoryStyle = function (category) {
+      if(selectedCategory.value.id !== null && category.id===selectedCategory.value.id){
         return{
           backgroundColor:'green',
         }
@@ -146,94 +135,44 @@ export default {
         backgroundColor: 'lightgrey',
         color:'black',
       }
-    },
-    // 选取分类的方法
-    chooseCategory(category){
+    };
+    const chooseCategory = function (category){
       // 如果点击已选取的分类。则将selectedCategory置空
-      if(this.selectedCategory!==null && category.id===this.selectedCategory.id){
-        this.selectedCategory = null;
-      }
-      // 若点击没有被选中的，则选中他
-      else {
-        this.selectedCategory = category;
-      }
-    },
-    //删除文章方法
-    delete_article(article_id){
-            //获取token
-            const that = this;
-            const token = localStorage.getItem('access.myblog');
-            authorization()
-              .then(function (response){
-                if(response[0]){
-                  const url = '/api/article/'+article_id;
-                  console.log('删除文章进程开始，文章id：',article_id);
-                  axios
-                    .delete(url,{
-                      headers:{Authorization: 'Bearer '+token}
-                    })
-                    .then(function (){
-                      console.log('文章已删除.');
-                      alert('文章已删除！');
-                      const username = localStorage.getItem('username.myblog')
-                      that.$router.push({name:'MyArticle',params:{author_name: username}})
-                    })
-                    .catch(function (error){
-                      console.log(error.message);
-                      alert("似乎出了点问题。")
-                    })
-                }
-                else {
-                  alert('令牌过期，请重新登录！')
-                }
-              })
-          },
-    // 提交方法
-    submit(){
-      const that = this;
-      // 验证一下权限
-      authorization()
-        .then(function (response){
-          if (response[0]){
-            let data = {
-              title:that.title,
-              body:that.body,
-            };
-            data.avatar_id = that.avatarID;
-            // 添加分类
-            if(that.selectedCategory){
-              data.category_id = that.selectedCategory.id;
-            }
-            // 标签预处理
-            data.tags = that.tags
-                // 逗号分割标签
-              .split(/[,.，]/)
-                // 剔除标签首位空格
-              .map(x=>x.trim())
-                // 剔除长度为0的无效标签
-              .filter(x=>x.charAt(0)!=='');
-            // 获取token
-            const token = localStorage.getItem('access.myblog');
-            const url = '/api/article/'+that.article_id+'/';
-            // 发送请求POST
-            axios
-              .put(url,data,{
-                headers:{Authorization: 'Bearer '+token}
-              })
-              .then(function (response){
-                console.log("文章修改成功!文章id：",that.article_id);
-                alert("文章修改成功！");
-                that.$router.push({name:'ArticleDetail',params:{id:response.data.id}});
-              })
-              .catch(function (error){
-                console.log(error.message);
-                alert('似乎除了点问题，您可以联系开发者解决.');
-              })
-          }else {
-            alert("登录已过期，请重新登录哦")
-            that.$router.push({name:'Login'})
+          if(selectedCategory.value!==null && category.id===selectedCategory.value.id){
+            selectedCategory.value = null;
           }
-        })
+          // 若点击没有被选中的，则选中他
+          else {
+            selectedCategory.value.id = category.id;
+          }
+    };
+    const {
+      submit,
+      delete_article
+    } = ArticleEdit(title,body,avatarID,selectedCategory,tags,article_id,router);
+    return{
+      title,
+      body,
+      categories,
+      selectedCategory,
+      tags,
+      showingDeleteAlert,
+      article_id,
+      avatarID,
+      avatar,
+      submit,
+      delete_article,
+      onFileChange,
+      categoryStyle,
+      chooseCategory,
+    }
+  },
+  computed:{
+    is_superuser(){
+      return localStorage.getItem('is_superuser.myblog')
+    },
+    hasLogin(){
+      return (localStorage.getItem('login.myblog') === "1")
     }
   }
 }

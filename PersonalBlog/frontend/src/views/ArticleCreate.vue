@@ -55,105 +55,44 @@ import BlogHeader from "@/components/BlogHeader";
 import BlogFooter from "@/components/BlogFooter";
 import axios from "axios";
 import authorization from "@/utils/authorization";
+import {useRouter} from "vue-router";
+import {onMounted, ref} from "vue";
 export default {
   name: "ArticleCreate",
   components: {BlogFooter, BlogHeader},
-  data:function (){
-    return{
-      title:'',
-      body:'',
-      categories:[],
-      selectedCategory:null,
-      tags:'',
-      avatarID:null,
+  setup(){
+    const title = ref('');
+    const body = ref('');
+    const categories = ref([]);
+    const router = useRouter()
+    const selectedCategory = ref(null);
+    const tags = ref(' ');
+    const avatarID = ref(null);
+    const InitCategory = function (){
+      axios
+          .get('/api/category/')
+          .then(response => categories.value=response.data)
+      //默认值为1
+
     }
-  },
-  computed:{
-    is_superuser(){
-      return localStorage.getItem('is_superuser.myblog')
-    },
-    hasLogin(){
-      return (localStorage.getItem('login.myblog') === "1")
-    },
-  },
-  mounted() {
-    //页面初始化时获取所有分类
-    axios
-    .get('/api/category/')
-    .then(response => this.categories=response.data)
-  },
-  methods:{
-    //将文件二进制数据添加到提交数据中
-    onFileChange(e){
-      const that = this;
-      const file = e.target.files[0];
-      let formData = new FormData();
-      formData.append("content",file);
-      // 验证一下权限
-      authorization()
-        .then(function (response) {
-          if (response[0]) {
-            console.log('ssss')
-            axios
-                .post('/api/avatar/', formData, {
-                  headers:{
-                    'Content-Type':'multipart/form-data',
-                    'Authorization':'Bearer '+localStorage.getItem('access.myblog')
-                  }
-                })
-                .then(response => that.avatarID = response.data.id)
-                .catch(function (error){
-                  console.log(error.message);
-                  alert('标题图未成功上传，请联系开发人员解决。')
-                })
-          } else {
-            alert('请登录后再进行操作！');
-            that.$router.push({name:'Login'});
-          }
-        })
-    },
-    // 根据分类是否被选中，按钮的颜色发生变化
-    // 这里可以看出Css也是可以被vue所绑定的，肥肠的方便
-    categoryStyle(category){
-      if(this.selectedCategory!==null && category.id===this.selectedCategory.id){
-        return{
-          backgroundColor:'green',
-        }
-      }
-      return {
-        backgroundColor: 'lightgrey',
-        color:'black',
-      }
-    },
-    // 选取分类的方法
-    chooseCategory(category){
-      // 如果点击已选取的分类。则将selectedCategory置空
-      if(this.selectedCategory!==null && category.id===this.selectedCategory.id){
-        this.selectedCategory = null;
-      }
-      // 若点击没有被选中的，则选中他
-      else {
-        this.selectedCategory = category;
-      }
-    },
-    // 提交方法
-    submit(){
-      const that = this;
+    onMounted(InitCategory);
+    const submit = function (){
       // 验证一下权限
       authorization()
         .then(function (response){
           if (response[0]){
             let data = {
-              title:that.title,
-              body:that.body,
+              title:title.value,
+              body:body.value,
+
             };
-            data.avatar_id = that.avatarID;
+            data.avatar_id = avatarID.value;
             // 添加分类
-            if(that.selectedCategory){
-              data.category_id = that.selectedCategory.id;
+            if(selectedCategory.value){
+              data.category_id = selectedCategory.value.id;
             }
             // 标签预处理
-            data.tags = that.tags
+            data.tags = tags.value
                 // 逗号分割标签
               .split(/[,.，]/)
                 // 剔除标签首位空格
@@ -172,7 +111,7 @@ export default {
               .then(function (response){
                 console.log("新文章提交成功!");
                 alert("提交成功！");
-                that.$router.push({name:'ArticleDetail',params:{id:response.data.id}});
+                router.push({name:'ArticleDetail',params:{id:response.data.id}});
               })
               .catch(function (error){
                 if(error.response.status===400){
@@ -185,10 +124,81 @@ export default {
               })
           }else {
             alert("登录已过期，请重新登录哦")
-            that.$router.push({name:'Login'})
+            router.push({name:'Login'})
           }
         })
+    };
+    const onFileChange = function (e){
+      const file = e.target.files[0];
+      let formData = new FormData();
+      formData.append("content",file);
+    // 验证一下权限
+      authorization()
+          .then(function (response) {
+              if (response[0]) {
+              console.log('标题图开始上传');
+              axios
+                  .post('/api/avatar/', formData, {
+                      headers:{
+                      'Content-Type':'multipart/form-data',
+                      'Authorization':'Bearer '+localStorage.getItem('access.myblog')
+                    }
+                  })
+                  .then(response => avatarID.value = response.data.id)
+                  .catch(function (error){
+                      console.log(error.message);
+                      alert('标题图未成功上传，请联系开发人员解决。')
+                  })
+              } else {
+              alert('请登录后再进行操作！');
+              router.push({name:'Login'})
+          }
+        })
+    };
+    return {
+      title,
+      body,
+      categories,
+      selectedCategory,
+      tags,
+      avatarID,
+      submit,
+      onFileChange
     }
+  },
+  computed:{
+    is_superuser(){
+      return localStorage.getItem('is_superuser.myblog')
+    },
+    hasLogin(){
+      return (localStorage.getItem('login.myblog') === "1")
+    },
+  },
+  methods:{
+    // 根据分类是否被选中，按钮的颜色发生变化
+      // 这里可以看出 css 也是可以被 vue 绑定的，很方便
+      categoryStyle(category) {
+        if (this.selectedCategory !== null && category.id === this.selectedCategory.id) {
+          return {
+            backgroundColor: 'darkgreen',
+          }
+        }
+        return {
+          backgroundColor: 'lightgrey',
+          color: 'black',
+        }
+      },
+      // 选取分类的方法
+      chooseCategory(category) {
+        // 如果点击已选取的分类，则将 selectedCategory 置空
+        if (this.selectedCategory !== null && this.selectedCategory.id === category.id) {
+          this.selectedCategory = null
+        }
+        // 如果没选中当前分类，则选中它
+        else {
+          this.selectedCategory = category;
+        }
+      },
   }
 }
 </script>

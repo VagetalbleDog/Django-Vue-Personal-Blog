@@ -29,7 +29,7 @@
     </form>
   </div>
   </div>
-  <div v-else>
+  <div v-else style="padding-top: 200px;font-size: large">
     <p style="text-align: center">抱歉，您还未登录！请<router-link to="/login" class="login-link">登录</router-link>后再进行相关操作.</p>
     <p style="text-align: center"><router-link to="{name:'Home'}">您可以点击这里回到主页</router-link></p>
   </div>

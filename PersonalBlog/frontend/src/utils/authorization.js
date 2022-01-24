@@ -2,7 +2,7 @@
 
 
 import axios from "axios";
-//异步方法
+//async声明异步方法
 async function authorization(){
     const storage = localStorage;
     let username = storage.getItem('username.myblog');

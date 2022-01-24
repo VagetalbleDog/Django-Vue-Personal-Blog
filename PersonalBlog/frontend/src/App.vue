@@ -13,7 +13,5 @@ export default {
 <style>
     #app{
       font-family: Georgia, Arial , sans-serif;
-      margin-left: 5px;
-      margin-right: 5px;
     }
 </style>

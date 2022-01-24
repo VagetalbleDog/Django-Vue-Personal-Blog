@@ -81,14 +81,15 @@ export default {
     authorization().then((data)=>[this.username]=data);
   },
   methods:{
-     logout(){
+     async logout() {
        localStorage.clear();
-       // this.$router.push({name:'Home'})
-    },
+       await this.$router.push({name: 'Home'}); // 先跳转回主页面，再重载数据
+       location.reload();
+     },
     refresh(){
        this.username = localStorage.getItem('username.myblog');
     }
-  }
+  },
 }
 </script>
 

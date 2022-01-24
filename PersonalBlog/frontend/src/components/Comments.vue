@@ -113,8 +113,8 @@ export default {
     },
     //修改日期显示格式
     formatted_time:function (iso_date_string){
-            const date = new Date(iso_date_string);
-            return date.toLocaleDateString() + ' '+date.toLocaleTimeString()
+      const date = new Date(iso_date_string);
+      return date.toLocaleDateString() + ' '+date.toLocaleTimeString()
     },
   }
 }
