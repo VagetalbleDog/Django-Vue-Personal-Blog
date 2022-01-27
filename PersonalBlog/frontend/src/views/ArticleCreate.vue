@@ -88,9 +88,11 @@ export default {
             };
             data.avatar_id = avatarID.value;
             // 添加分类
-            if(selectedCategory.value){
-              data.category_id = selectedCategory.value.id;
+            if (!selectedCategory.value){
+              alert('您还没选择文章分类呢！');
+              return;
             }
+            data.category_id = selectedCategory.value.id;
             // 标签预处理
             data.tags = tags.value
                 // 逗号分割标签
