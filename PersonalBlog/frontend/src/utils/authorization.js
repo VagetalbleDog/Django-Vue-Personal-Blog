@@ -28,7 +28,6 @@ async function authorization(){
             const nextExpiredTime = Date.parse(response.headers.date)+60000;
             storage.setItem('access.myblog',response.data.access);
             storage.setItem('expiredTime.myblog',nextExpiredTime);
-            storage.removeItem('refresh.myblog');
 
             storage.setItem('login.myblog',"1")
             console.log('令牌已刷新!');

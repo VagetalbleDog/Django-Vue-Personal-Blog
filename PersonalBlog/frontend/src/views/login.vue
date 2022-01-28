@@ -43,7 +43,7 @@ export default {
           .then(function (response){
             const storage = localStorage;
             //Token被设置为5分钟
-            const expiredTime = Date.parse(response.headers.date) + 60000*5;
+            const expiredTime = Date.parse(response.headers.date) + 60000;
             //设置localStorage
 
             storage.setItem('access.myblog',response.data.access);
