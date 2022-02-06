@@ -9,6 +9,7 @@ import RequireAuthorizations from "@/views/RequireAuthorizations";
 import CategoryDetail from "@/views/CategoryDetail";
 import ArticleEdit from "@/views/ArticleEdit";
 import MyArticle from "@/views/MyArticle";
+import ErrorPage404 from "@/views/ErrorPage404";
 
 const routes = [
     {
@@ -70,7 +71,13 @@ const routes = [
         name:'MyArticle',
         component: MyArticle,
         meta: {title: '我发表的文章'}
-    }
+    },
+    {
+        path: '/:pathMatch(.*)',
+        name:'error404',
+        component: ErrorPage404,
+        meta: {title: '您好像走丢了'}
+    },
 ];
 
 const router = createRouter({
