@@ -207,6 +207,7 @@ export default {
 
 <style scoped>
   .category-btn {
+    width: auto;
     margin-right: 10px;
     font-size: 13px;
   }
