@@ -44,7 +44,7 @@
   <div style="text-align: center">
   <h3>发布评论</h3>
 <!--  评论文本输入空间-->
-  <textarea v-model="message" :placeholder="placeholder" name="comment" id="comment-area" cols="80" rows="2"></textarea>
+  <textarea v-model="message" :placeholder="placeholder" name="comment" id="comment-area" cols="5" rows="auto" style="width: 80%;"></textarea>
   <div>
     <button @click="submit" class="btn btn-primary">发布</button>
   </div>

@@ -1,5 +1,5 @@
 <template>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="">
   <div class="container">
     <!-- 导航栏商标 -->
     <div class="navbar-brand" style="text-align: left">
