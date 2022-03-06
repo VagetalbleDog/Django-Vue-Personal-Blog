@@ -47,6 +47,9 @@ function Submit(title,body,avatarID,selectedCategory,tags,article_id,router){
                 router.push({name:'ArticleDetail',params:{id:response.data.id}});
               })
               .catch(function (error){
+                if(error.response.status===403){
+                    alert('你想做坏事？还没权限哦！')
+                }
                 console.log(error.message);
                 alert('似乎除了点问题，您可以联系开发者解决.');
               })
@@ -74,6 +77,9 @@ function DeleteArticle(article_id,router){
                       router.push({name:'MyArticle',params:{author_name: username}})
                     })
                     .catch(function (error){
+                      if(error.response.status===403){
+                          alert('你想做坏事？还没权限哦！')
+                      }
                       console.log(error.message);
                       alert("似乎出了点问题。")
                     })

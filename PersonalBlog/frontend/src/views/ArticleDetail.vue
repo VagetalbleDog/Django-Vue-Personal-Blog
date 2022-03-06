@@ -10,7 +10,7 @@
             </p>
             <div v-html="article.body_html" class="article-body" style="font-size: large;padding-top: 50px"></div>
         </div>
-        <div style="position: fixed;margin-left: 78%">
+        <div style="position: fixed;left: 75%">
             <h3>目录</h3>
             <div v-html="article.toc_html" class="toc"></div>
         </div>
@@ -78,7 +78,6 @@ export default {
     .toc ul {
         list-style-type: none;
     }
-
     .toc a {
         color: gray;
     }

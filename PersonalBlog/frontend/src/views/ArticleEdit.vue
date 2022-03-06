@@ -1,6 +1,6 @@
 <template>
 <BlogHeader/>
-  <div v-if="is_superuser==='true'&&hasLogin" id="article-create">
+  <div v-if="hasLogin" id="article-create">
     <h3>更新或删除文章</h3>
     <form id="image_form" v-if="!avatar">
     <div class="form-elem">
@@ -46,10 +46,6 @@
       </div>
     </form>
 </div>
-  <div v-else-if="hasLogin" style="padding-top: 150px;font-size: x-large">
-    <p style="text-align: center">抱歉，您的权限暂不支持！请<router-link :to="{name:'RequireAuthorization'}" class="login-link">联系开发者获取权限</router-link>后再进行相关操作.</p>
-    <p style="text-align: center"><router-link to="{name:'Home'}">您也可以点击这里回到主页</router-link></p>
-  </div>
   <div v-else style="padding-top: 150px;font-size: x-large">
     <p style="text-align: center">抱歉，您还未登录！请<router-link to="/login" class="login-link">登录</router-link>后再进行相关操作.</p>
     <p style="text-align: center"><router-link to="{name:'Home'}">您可以点击这里回到主页</router-link></p>
