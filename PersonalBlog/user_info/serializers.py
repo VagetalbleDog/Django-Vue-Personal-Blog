@@ -7,7 +7,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name='user-detail', lookup_field='username')
 
     # 指定解析超链接关系的字段为username
-
     class Meta:
         model = User
         fields = [
@@ -15,7 +14,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             'id',
             'username',
             'password',
-            'is_superuser'
         ]
         extra_fields = {
             'password': {'write_only': True},
